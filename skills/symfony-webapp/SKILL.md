@@ -71,7 +71,7 @@ The PHP namespace stays `App`. The Docker entrypoint installs `symfony/skeleton`
 
 **Step 6** — `webapp` leaves empty `src/Controller`, `src/Entity`, and `src/Repository` directories (each is only a `.gitignore`). Delete them. Leave `src/Migrations`.
 
-**Step 7** — when login is included, follow the User, login, and register templates in [bootstrap.md](bootstrap.md). Then `doctrine:migrations:diff` and migrate for that user table.
+**Step 7** — when login is included, follow the User, login, and register templates in [bootstrap.md](bootstrap.md). Then `doctrine:migrations:diff`, set `getDescription()`, and migrate for that user table.
 
 **Step 8** — write `README.md` from the template in [bootstrap.md](bootstrap.md).
 
@@ -85,7 +85,7 @@ Run this only when the user names a resource. Do not run it to finish a bootstra
 4. Service for any business rule, even when only one action calls it. The service does not persist
 5. Thin controller: index, new, edit, show, delete. Class `#[Route]` sets `name: 'app_note'`; each method sets only the suffix (`name: '_new'`). Symfony concatenates them (`app_note_new`). Call the service, then `persist` / `flush` / `remove`. Every POST ends in a redirect. Delete is a POST form with CSRF
 6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig` for this feature
-7. `doctrine:migrations:diff`, review the SQL, then `doctrine:migrations:migrate`
+7. `doctrine:migrations:diff`, review the SQL, set `getDescription()` to a sentence about that change, then `doctrine:migrations:migrate`
 
 Show, edit, and delete load the entity with the argument resolver (`Note $note`). List and search go through the repository.
 
@@ -134,7 +134,7 @@ Leave the Docker files in place. Flex may edit `Dockerfile` and `compose.yaml` w
 1. **Runtime** — create the project only from `https://github.com/dunglas/symfony-docker` (`main`). Run PHP, Composer, and `bin/console` with `docker compose exec php`. The site is `https://localhost` (accept the local Caddy certificate).
 2. **Packages** — `composer require` inside the `php` service so Flex recipes see `extra.symfony.docker`. If `Dockerfile` or `compose.yaml` changes, `docker compose up --build --wait`.
 3. **Database** — PostgreSQL is the Compose service added by the `orm-pack` recipe (`webapp` pulls it in). `DATABASE_URL` in `compose.yaml` points at the `database` host. Do not point the app at a host Postgres.
-4. **Schema** — change the schema by editing entities, then `doctrine:migrations:diff`. Review the generated SQL. Apply with `doctrine:migrations:migrate --no-interaction`. Do not alter tables only in the database.
+4. **Schema** — change the schema by editing entities, then `doctrine:migrations:diff`. Review the generated SQL. Set `getDescription()` to a sentence that says what the migration changes. Do not leave it empty. Apply with `doctrine:migrations:migrate --no-interaction`. Do not alter tables only in the database.
 5. **Validation** — `Assert` constraints go on the entity. The controller checks `$form->isSubmitted() && $form->isValid()` and nothing else. Constraints on an unmapped field (plain password) stay on the form.
 6. **Authorization** — `#[IsGranted]` or a voter. Hiding a button in Twig is not authorization. Login and register are `PUBLIC_ACCESS`. Everything else is `ROLE_USER` when login is enabled.
 7. **Forms** — every form is a `FormType` rendered with `form_start` / `form_widget` / `form_end`. Login is the exception: it stays the firewall HTML form (`_username`, `_password`, `_csrf_token`). Search is `NoteSearchType` (GET, no CSRF, field name `query`). Delete is that feature's `DeleteType`; the form component checks its CSRF token.

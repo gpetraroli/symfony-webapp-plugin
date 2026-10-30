@@ -45,6 +45,7 @@ Do not set `SYMFONY_VERSION` unless the user asked. Do not run `symfony new` or 
 - `addFlash('error')` — use `danger`
 - Printing `exception.message` in Twig
 - Editing rows in Postgres without a migration file
+- A migration whose `getDescription()` is empty
 - A second database service beside the one the `orm-pack` recipe added
 - Putting the Docker install block back into `frankenphp/docker-entrypoint.sh`
 - Committing `.env.local`

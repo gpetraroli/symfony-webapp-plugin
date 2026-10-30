@@ -4,13 +4,10 @@ Use this only when the user has named a resource. `Note` below is the example. D
 
 Example entity: `Note` / table `note` / route prefix `/notes`, under `src/Note/`. Rename consistently (`note`, `notes`, `Note`, `NoteRepository`, `NoteType`). The class route name is `app_note`; each action adds a suffix (`_index`, `_new`, `_show`, `_edit`, `_delete`), so the route name is `app_note_new`. Add `NoteService` only when a business rule exists.
 
-Create files in this order. Generate the migration last.
-
-Commands:
+Generate the migration last. `doctrine:migrations:diff` writes the class. Set `getDescription()` before `doctrine:migrations:migrate`, as in section 7.
 
 ```sh
 docker compose exec php php bin/console doctrine:migrations:diff --no-interaction
-docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
 ## 1. Entity — `src/Note/Entity/Note.php`
@@ -508,4 +505,8 @@ Add one item to `templates/components/Menu.html.twig`:
 
 ## 7. Migration
 
-Review the generated SQL. It should create the resource table and, on the first resource of a new app, `app_user`. Then migrate. Do not apply schema changes with raw SQL against the database.
+Review the generated SQL. It should create the resource table and, when this migration also introduces users, `app_user`. Set `getDescription()` to a sentence about that change. Do not leave it as `''`. Then migrate. Do not apply schema changes with raw SQL against the database.
+
+```sh
+docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+```

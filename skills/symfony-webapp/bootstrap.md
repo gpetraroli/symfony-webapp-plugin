@@ -509,10 +509,20 @@ After the User entity exists:
 
 ```sh
 docker compose exec php php bin/console doctrine:migrations:diff --no-interaction
-docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-Read the generated SQL before migrating.
+Read the generated SQL. Set `getDescription()` to a sentence about that change before migrating. Do not leave it as `''`.
+
+```php
+public function getDescription(): string
+{
+    return 'Create the app_user table';
+}
+```
+
+```sh
+docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+```
 
 ## 8. Check
 
