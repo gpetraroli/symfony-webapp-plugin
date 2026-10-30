@@ -1,0 +1,13 @@
+{
+  "name": "symfony-twig-bootstrap",
+  "version": "1.0.0",
+  "description": "Scaffolds and extends Symfony web apps using Twig, Bootstrap 5, Doctrine, and the dunglas/symfony-docker runtime.",
+  "author": {
+    "name": "Giuseppe Petraroli"
+  },
+  "homepage": "https://github.com/gpetraroli/symfony-webapp-plugin",
+  "repository": "https://github.com/gpetraroli/symfony-webapp-plugin",
+  "license": "MIT",
+  "keywords": ["symfony", "twig", "bootstrap", "doctrine", "docker"],
+  "logo": "assets/logo.svg"
+}

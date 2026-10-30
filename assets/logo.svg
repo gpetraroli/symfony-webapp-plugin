@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="512" height="512" role="img" aria-label="Symfony Twig Bootstrap">
+  <rect width="128" height="128" rx="28" fill="#12141A"/>
+  <rect x="3.5" y="3.5" width="121" height="121" rx="24.5" fill="none" stroke="#2A2E38" stroke-width="2"/>
+  <rect x="28" y="30" width="72" height="68" rx="8" fill="#1C1F27"/>
+  <rect x="36" y="40" width="56" height="8" rx="3" fill="#7952B3"/>
+  <rect x="36" y="56" width="40" height="8" rx="3" fill="#E8E8E8"/>
+  <rect x="36" y="72" width="48" height="8" rx="3" fill="#3D8BFD"/>
+</svg>

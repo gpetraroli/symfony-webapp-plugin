@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "symfony-twig-bootstrap",
+  "description": "Scaffolds Symfony web apps with Twig, Bootstrap, and Doctrine on the Symfony Docker skeleton.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Giuseppe Petraroli"
+  },
+  "homepage": "https://github.com/gpetraroli/symfony-webapp-plugin",
+  "repository": "https://github.com/gpetraroli/symfony-webapp-plugin",
+  "license": "MIT",
+  "keywords": ["symfony", "twig", "bootstrap", "doctrine", "docker"]
+}
