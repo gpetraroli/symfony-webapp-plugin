@@ -16,13 +16,13 @@ Twig (UI)
     ↕  form view, flashes
 Controller (HTTP)
     ↕  constructor injection
-Form type
+Form type (fields, constraints, SubmitType)
     ↕
 Service (business rules; the controller persists)
     ↕
 Repository (queries)
     ↕
-Entity (fields, relations, Assert)
+Entity (fields, relations)
     ↕
 Doctrine
 ```
@@ -31,12 +31,12 @@ Doctrine
 |---|---|---|
 | **Twig** | Markup, Bootstrap, flashes, form errors, `<twig:Name>` components | Queries, authorization decisions, calculations |
 | **Controller** | Route, form `handleRequest`, CSRF, `persist` / `flush` / `remove`, flash, redirect or render | Business rules, DQL, HTML |
-| **Form type** | Every form except login: fields, options, and a `SubmitType` | Validation of entity fields, persistence, a `<form>` written in Twig |
-| **Entity** | Fields, relations, `Assert` constraints | `Request`, Twig, queries |
+| **Form type** | Every form except login: fields, `constraints`, and a `SubmitType` | Persistence, a `<form>` written in Twig |
+| **Entity** | Fields, relations, column mapping | `Assert` constraints, `Request`, Twig, queries |
 | **Repository** | QueryBuilder queries | HTTP, flashes, rendering, business rules |
 | **Service** | Business rules, including a rule used by one action | HTTP, rendering, Twig, queries, `persist` / `flush` / `remove` |
 
-Controllers stay thin. A business rule goes in a service, then the controller calls `persist`, `flush`, or `remove`. **Validation of entity fields lives on the entity.**
+Controllers stay thin. A business rule goes in a service, then the controller calls `persist`, `flush`, or `remove`. **Validation lives on the form type.**
 
 ## New app workflow
 
@@ -79,9 +79,9 @@ The PHP namespace stays `App`. The Docker entrypoint installs `symfony/skeleton`
 
 Run this only when the user names a resource. Do not run it to finish a bootstrap.
 
-1. Entity with `Assert` constraints and relations, under `src/<Feature>/Entity`
+1. Entity with fields and relations, under `src/<Feature>/Entity`. No `Assert` constraints
 2. Repository methods for list and search. Parameters are bound. No concatenated SQL
-3. Form types in `src/<Feature>/Form` (`NoteType`, `NoteSearchType`, `DeleteType`), each ending with `->add(SubmitType::class)`
+3. Form types in `src/<Feature>/Form` (`NoteType`, `NoteSearchType`, `DeleteType`). Field constraints go in each field's `constraints` option. A class-level constraint such as `UniqueEntity` goes in `configureOptions`. Each form ends with `->add(SubmitType::class)`
 4. Service for any business rule, even when only one action calls it. The service does not persist
 5. Thin controller: index, new, edit, show, delete. Class `#[Route]` sets `name: 'app_note'`; each method sets only the suffix (`name: '_new'`). Symfony concatenates them (`app_note_new`). Call the service, then `persist` / `flush` / `remove`. Every POST ends in a redirect. Delete is a POST form with CSRF
 6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig` for this feature
@@ -135,7 +135,7 @@ Leave the Docker files in place. Flex may edit `Dockerfile` and `compose.yaml` w
 2. **Packages** — `composer require` inside the `php` service so Flex recipes see `extra.symfony.docker`. If `Dockerfile` or `compose.yaml` changes, `docker compose up --build --wait`.
 3. **Database** — PostgreSQL is the Compose service added by the `orm-pack` recipe (`webapp` pulls it in). `DATABASE_URL` in `compose.yaml` points at the `database` host. Do not point the app at a host Postgres.
 4. **Schema** — change the schema by editing entities, then `doctrine:migrations:diff`. Review the generated SQL. Set `getDescription()` to a sentence that says what the migration changes. Do not leave it empty. Apply with `doctrine:migrations:migrate --no-interaction`. Do not alter tables only in the database.
-5. **Validation** — `Assert` constraints go on the entity. The controller checks `$form->isSubmitted() && $form->isValid()` and nothing else. Constraints on an unmapped field (plain password) stay on the form.
+5. **Validation** — `Assert` constraints go on the form type, in the field `constraints` option. A constraint on the whole object (`UniqueEntity`) goes in `configureOptions`. Do not put `Assert` on the entity. The controller checks `$form->isSubmitted() && $form->isValid()` and nothing else. Login has no form type, so it has no constraints.
 6. **Authorization** — `#[IsGranted]` or a voter. Hiding a button in Twig is not authorization. Login and register are `PUBLIC_ACCESS`. Everything else is `ROLE_USER` when login is enabled.
 7. **Forms** — every form is a `FormType` rendered with `form_start` / `form_widget` / `form_end`. Login is the exception: it stays the firewall HTML form (`_username`, `_password`, `_csrf_token`). Search is `NoteSearchType` (GET, no CSRF, field name `query`). Delete is that feature's `DeleteType`; the form component checks its CSRF token.
 8. **Flashes** — Bootstrap alert names: `success` and `danger`.

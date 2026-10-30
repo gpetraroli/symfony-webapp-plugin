@@ -56,7 +56,7 @@ Do not set `SYMFONY_VERSION` unless the user asked. Do not run `symfony new` or 
 |---|---|
 | Render HTML or a form | Twig |
 | Read the request, check CSRF, `persist` / `flush` / `remove`, flash, redirect | Controller |
-| Declare fields and `->add(SubmitType::class)` | Form type |
-| Reject an empty title | Entity `Assert` |
+| Declare fields, `constraints`, and `->add(SubmitType::class)` | Form type |
+| Reject an empty title | Form type `constraints` |
 | Filter a list | Repository `search()` |
 | Apply a business rule, including one used by a single action | Service |

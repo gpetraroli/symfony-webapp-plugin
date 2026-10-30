@@ -12,7 +12,7 @@ docker compose exec php php bin/console doctrine:migrations:diff --no-interactio
 
 ## 1. Entity — `src/Note/Entity/Note.php`
 
-Validation lives here. No `Request`, no queries.
+Fields, relations, and column mapping. No `Assert` constraints. No `Request`, no queries.
 
 ```php
 <?php
@@ -23,7 +23,6 @@ namespace App\Note\Entity;
 
 use App\Note\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
 class Note
@@ -34,12 +33,9 @@ class Note
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 255)]
     private string $title = '';
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Assert\Length(max: 10000)]
     private ?string $body = null;
 
     #[ORM\Column]
@@ -128,7 +124,7 @@ Show, edit, and delete do not need a finder. The controller type-hints `Note $no
 
 ## 3. Form — `src/Note/Form/NoteType.php`
 
-No `Assert` constraints here. They are already on the entity. Every form type ends with a `SubmitType`. `form_widget` renders that button, so the template has no `<button type="submit">`.
+Constraints live here, on each field's `constraints` option. Do not put them on the entity. Every form type ends with a `SubmitType`. `form_widget` renders that button, so the template has no `<button type="submit">`.
 
 ```php
 <?php
@@ -144,15 +140,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NoteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(max: 255),
+                ],
+            ])
             ->add('body', TextareaType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Length(max: 10000),
+                ],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

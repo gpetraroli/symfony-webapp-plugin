@@ -166,14 +166,11 @@ namespace App\User\Entity;
 
 use App\User\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'app_user')]
-#[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -182,8 +179,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
     private string $email = '';
 
     /** @var list<string> */
@@ -265,7 +260,7 @@ class UserRepository extends ServiceEntityRepository
 
 ### src/User/Form/RegistrationType.php
 
-`plainPassword` is unmapped, so its constraints stay on the form. Email constraints stay on the entity.
+Every constraint is on this form. `plainPassword` is unmapped. `UniqueEntity` is a constraint on the whole form.
 
 ```php
 <?php
@@ -275,6 +270,7 @@ declare(strict_types=1);
 namespace App\User\Form;
 
 use App\User\Entity\User;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -282,6 +278,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -290,7 +287,12 @@ class RegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Email(),
+                ],
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
@@ -310,6 +312,9 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'constraints' => [
+                new UniqueEntity(fields: ['email']),
+            ],
         ]);
     }
 }

@@ -11,18 +11,18 @@ Twig (UI)
     ↕  form view, flashes
 Controller (HTTP)
     ↕  constructor injection
-Form type
+Form type (fields, constraints, SubmitType)
     ↕
 Service (business rules; the controller persists)
     ↕
 Repository (queries)
     ↕
-Entity (fields, relations, Assert)
+Entity (fields, relations)
     ↕
 Doctrine
 ```
 
-Twig owns markup. Controllers stay thin: they handle the request, call a service for any business rule, then `persist`, `flush`, or `remove`, and flash and redirect or render. Validation lives on the entity. Queries live in repositories. Services hold business rules even when only one action calls them, and they do not touch the entity manager. Each feature owns those layers under `src/<Feature>/` (`Controller`, `Entity`, `Form`, `Repository`, `Service`). Browser behavior is Hotwire Stimulus, one responsibility per controller.
+Twig owns markup. Controllers stay thin: they handle the request, call a service for any business rule, then `persist`, `flush`, or `remove`, and flash and redirect or render. Validation lives on the form type. Queries live in repositories. Services hold business rules even when only one action calls them, and they do not touch the entity manager. Each feature owns those layers under `src/<Feature>/` (`Controller`, `Entity`, `Form`, `Repository`, `Service`). Browser behavior is Hotwire Stimulus, one responsibility per controller.
 
 Every PHP, Composer, and `bin/console` command runs inside the `php` service (`docker compose exec php …`). The app is served at `https://localhost`.
 
