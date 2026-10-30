@@ -1,7 +1,7 @@
 ---
-
-## name: symfony-twig-bootstrap
+name: symfony-twig-bootstrap
 description: Scaffolds and extends Symfony web apps using Twig, Bootstrap 5, Hotwire Stimulus, Doctrine, form login, and the dunglas/symfony-docker FrankenPHP runtime. Use when creating a new Symfony web application, adding a CRUD page, form login, Doctrine migrations, or Stimulus controllers, or when the user mentions Symfony, Twig, Bootstrap, Stimulus, Hotwire, or Symfony Docker.
+---
 
 # Symfony + Twig + Bootstrap
 
