@@ -45,7 +45,7 @@ Copy this checklist and complete it in order:
 ```
 Bootstrap:
 - [ ] 1. Confirm the directory name. Do not invent a resource
-- [ ] 2. Clone dunglas/symfony-docker and start Compose (HTTP, skeleton only)
+- [ ] 2. Clone dunglas/symfony-docker, delete its docs/, and start Compose (skeleton only)
 - [ ] 3. composer require webapp inside the php service, then rebuild
 - [ ] 4. Sass theme: symfonycasts/sass-bundle, twbs/bootstrap, assets/styles/_theme.scss, sass:build
 - [ ] 5. base.html.twig, base_layout.html.twig, Topbar, empty Menu, flashes, form theme

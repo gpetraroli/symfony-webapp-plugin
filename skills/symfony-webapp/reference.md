@@ -6,7 +6,7 @@ Run from the directory that contains `compose.yaml`. The `php` service must be u
 
 | Task | Command |
 |---|---|
-| Create the project | `git clone --depth 1 https://github.com/dunglas/symfony-docker.git <app_dir>` then `docker compose build --pull --no-cache` and `docker compose up --wait` |
+| Create the project | `git clone --depth 1 https://github.com/dunglas/symfony-docker.git <app_dir>` then `rm -rf .git docs`, `docker compose build --pull --no-cache`, and `docker compose up --wait` |
 | Symfony version | `docker compose exec php php bin/console -V` |
 | Require a package | `docker compose exec php composer require <package> --no-interaction` |
 | Rebuild after a recipe edits Docker files | `docker compose up --build --wait` |

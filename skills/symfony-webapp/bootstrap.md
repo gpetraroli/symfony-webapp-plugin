@@ -6,12 +6,12 @@ Run every command from the app directory (the one that contains `compose.yaml`).
 
 ## 1. Create the project
 
-Clone [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker/tree/main) into an empty directory. Drop the upstream git history so the app has its own repository.
+Clone [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker/tree/main) into an empty directory. Drop the upstream git history so the app has its own repository. Delete `docs/`: that directory is the Symfony Docker project's documentation, not the app's.
 
 ```sh
 git clone --depth 1 https://github.com/dunglas/symfony-docker.git <app_dir>
 cd <app_dir>
-rm -rf .git
+rm -rf .git docs
 git init
 docker compose build --pull --no-cache
 docker compose up --wait
