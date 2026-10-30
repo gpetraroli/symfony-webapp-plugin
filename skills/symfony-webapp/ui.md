@@ -320,13 +320,10 @@ twig:
 
 ## templates/components/Menu.html.twig
 
-One link per feature. The example is the first resource.
+One link per feature that exists. Bootstrap leaves the list empty. Add a link only when that feature is created.
 
 ```twig
 <ul{{ attributes.defaults({class: 'nav flex-column w-100'}) }}>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_note_index') }}">Notes</a>
-    </li>
 </ul>
 ```
 

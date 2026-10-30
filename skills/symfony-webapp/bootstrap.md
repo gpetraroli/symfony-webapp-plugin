@@ -1,6 +1,6 @@
 # Bootstrap templates
 
-Use these when scaffolding an app. Replace `<app_dir>`, `<home_route>`, and the first resource name. Layout partials: [ui.md](ui.md). CRUD: [feature.md](feature.md).
+Use these when scaffolding an app. Replace `<app_dir>`. Layout partials: [ui.md](ui.md). A CRUD resource is a separate request: [feature.md](feature.md). Do not create the Note example while bootstrapping.
 
 Run every command from the app directory (the one that contains `compose.yaml`). Docker Compose v2.10+ is required. Do not install PHP or Composer on the host.
 
@@ -95,6 +95,8 @@ During development, run `sass:build --watch` in the background. The first build 
 ## 4. Feature folders
 
 Code lives under `src/<Feature>/`, not under `src/Controller` or `src/Entity`. `User` and `Note` are features. Namespace `App\Note\Entity\Note` is the file `src/Note/Entity/Note.php`.
+
+After `webapp` is installed, delete `src/Controller`, `src/Entity`, and `src/Repository`. Flex puts only an empty `.gitignore` in each. Leave `src/Migrations`. Do not recreate those three directories.
 
 In `config/packages/doctrine.yaml`, change the Flex `App` mapping so entities under every feature are found:
 
@@ -343,7 +345,7 @@ class RegistrationService
 
 ### src/User/Controller/SecurityController.php
 
-Replace `<home_route>` with the first resource's index route name (for example `app_note_index`). The class route name is `app`; each method adds the suffix (`_login`, `_logout`, `_register`). `path: ''` sets that name prefix without prefixing the path.
+The class route name is `app`; each method adds the suffix (`_login`, `_logout`, `_register`). `path: ''` sets that name prefix without prefixing the path. A signed-in user goes to `app_home`.
 
 ```php
 <?php
@@ -369,7 +371,7 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('<home_route>');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('user/login.html.twig', [
@@ -391,7 +393,7 @@ class SecurityController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         if ($this->getUser()) {
-            return $this->redirectToRoute('<home_route>');
+            return $this->redirectToRoute('app_home');
         }
 
         $user = new User();
@@ -473,7 +475,7 @@ This is the firewall login form (`_username`, `_password`, `_csrf_token`), not a
 
 ## 6. Home
 
-Remove the Flex welcome controller if it only renders the default welcome page. Add a redirect from `/` to `<home_route>` so `https://localhost` opens the first resource.
+Remove the Flex welcome controller if it only renders the default welcome page. `/` renders a home page. It does not redirect to a resource. Add a redirect only when the user has named that home route.
 
 ```php
 // src/Home/Controller/HomeController.php
@@ -485,14 +487,25 @@ class HomeController extends AbstractController
     #[Route('/', name: '_home')]
     public function home(): Response
     {
-        return $this->redirectToRoute('<home_route>');
+        return $this->render('home/index.html.twig');
     }
 }
 ```
 
+```twig
+{# templates/home/index.html.twig #}
+{% extends 'base_layout.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1 class="h3">{{ app_name|default('App') }}</h1>
+{% endblock %}
+```
+
 ## 7. Migrations
 
-After the User entity (and the first resource) exist:
+After the User entity exists:
 
 ```sh
 docker compose exec php php bin/console doctrine:migrations:diff --no-interaction

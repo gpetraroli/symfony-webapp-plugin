@@ -1,5 +1,7 @@
 # Adding a CRUD resource
 
+Use this only when the user has named a resource. `Note` below is the example. Do not create `src/Note` or `templates/note` while bootstrapping an app.
+
 Example entity: `Note` / table `note` / route prefix `/notes`, under `src/Note/`. Rename consistently (`note`, `notes`, `Note`, `NoteRepository`, `NoteType`). The class route name is `app_note`; each action adds a suffix (`_index`, `_new`, `_show`, `_edit`, `_delete`), so the route name is `app_note_new`. Add `NoteService` only when a business rule exists.
 
 Create files in this order. Generate the migration last.
@@ -495,6 +497,14 @@ Declare `/{id}/edit` and `/{id}/delete` as their own routes. Keep the `requireme
 ```
 
 `delete_form` is created in `show()`. The modal renders that form. Do not write a `<form>` in Twig.
+
+Add one item to `templates/components/Menu.html.twig`:
+
+```twig
+<li class="nav-item">
+    <a class="nav-link" href="{{ path('app_note_index') }}">Notes</a>
+</li>
+```
 
 ## 7. Migration
 

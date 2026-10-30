@@ -43,23 +43,21 @@ Controllers stay thin. A business rule goes in a service, then the controller ca
 Copy this checklist and complete it in order:
 
 ```
-New app:
-- [ ] 1. Confirm directory name, first resource, login
-- [ ] 2. Clone dunglas/symfony-docker and start Compose (installs symfony/skeleton only)
+Bootstrap:
+- [ ] 1. Confirm the directory name. Do not invent a resource
+- [ ] 2. Clone dunglas/symfony-docker and start Compose (HTTP, skeleton only)
 - [ ] 3. composer require webapp inside the php service, then rebuild
 - [ ] 4. Sass theme: symfonycasts/sass-bundle, twbs/bootstrap, assets/styles/_theme.scss, sass:build
-- [ ] 5. base.html.twig, base_layout.html.twig, Topbar, Menu, flashes, form theme
-- [ ] 6. Security: User, form login, register, logout
-- [ ] 7. First resource via the feature workflow
-- [ ] 8. README (Compose, migrations, https://localhost)
+- [ ] 5. base.html.twig, base_layout.html.twig, Topbar, empty Menu, flashes, form theme
+- [ ] 6. Delete the empty Flex directories src/Controller, src/Entity, and src/Repository
+- [ ] 7. Security, unless the user said no login: User, form login, register, logout
+- [ ] 8. Home page. Do not redirect to a resource
+- [ ] 9. README (Compose, migrations, https://localhost)
 ```
 
-**Step 1 — Confirm scope** if the user did not specify:
+**Step 1 — Confirm the directory name** if the user did not give one. That is the only question for a bootstrap. Do not ask for a resource and do not choose one. `Note` in [feature.md](feature.md) is an example for a later request. Do not create `src/Note`, `templates/note`, or a Notes menu link during bootstrap.
 
-- App directory name (this becomes the project folder)
-- First resource name (singular domain noun, e.g. `note`, `task`)
-- Whether email/password login is required (default: yes)
-- Home route after login (default: that resource's index)
+Login is part of bootstrap unless the user said they do not want it. The home page is `src/Home`, not a CRUD resource.
 
 The PHP namespace stays `App`. The Docker entrypoint installs `symfony/skeleton` with that default. Do not set `SYMFONY_VERSION` unless the user asked for a specific Symfony version.
 
@@ -69,20 +67,24 @@ The PHP namespace stays `App`. The Docker entrypoint installs `symfony/skeleton`
 
 **Step 4 — Bootstrap 5 from Sass.** Require `symfonycasts/sass-bundle` and `twbs/bootstrap` inside the container. Copy `assets/styles/_theme.scss` and `assets/styles/app.scss` from [ui.md](ui.md). Keep the webapp pack's Hotwire Stimulus bootstrap. `import 'bootstrap'` in `app.js` only enables Bootstrap's `data-bs-*` widgets. Any other browser behavior is its own Stimulus controller with one responsibility. Form theme `bootstrap_5_layout.html.twig`. No Bootstrap CDN, no Webpack Encore.
 
-**Step 5** — copy the layout and security templates. Do not invent a different auth scheme.
+**Step 5** — copy the layout from [ui.md](ui.md). The Menu has no feature links yet.
 
-**Step 6** — follow [feature.md](feature.md) for the first entity, then `doctrine:migrations:diff` and migrate.
+**Step 6** — `webapp` leaves empty `src/Controller`, `src/Entity`, and `src/Repository` directories (each is only a `.gitignore`). Delete them. Leave `src/Migrations`.
 
-**Step 7** — write `README.md` from the template in [bootstrap.md](bootstrap.md).
+**Step 7** — when login is included, follow the User, login, and register templates in [bootstrap.md](bootstrap.md). Then `doctrine:migrations:diff` and migrate for that user table.
+
+**Step 8** — write `README.md` from the template in [bootstrap.md](bootstrap.md).
 
 ## New feature workflow
+
+Run this only when the user names a resource. Do not run it to finish a bootstrap.
 
 1. Entity with `Assert` constraints and relations, under `src/<Feature>/Entity`
 2. Repository methods for list and search. Parameters are bound. No concatenated SQL
 3. Form types in `src/<Feature>/Form` (`NoteType`, `NoteSearchType`, `DeleteType`), each ending with `->add(SubmitType::class)`
 4. Service for any business rule, even when only one action calls it. The service does not persist
 5. Thin controller: index, new, edit, show, delete. Class `#[Route]` sets `name: 'app_note'`; each method sets only the suffix (`name: '_new'`). Symfony concatenates them (`app_note_new`). Call the service, then `persist` / `flush` / `remove`. Every POST ends in a redirect. Delete is a POST form with CSRF
-6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`
+6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig` for this feature
 7. `doctrine:migrations:diff`, review the SQL, then `doctrine:migrations:migrate`
 
 Show, edit, and delete load the entity with the argument resolver (`Note $note`). List and search go through the repository.
@@ -121,7 +123,7 @@ assets/
     _theme.scss
 ```
 
-`<Feature>` is the singular PascalCase noun (`User`, `Note`). A class lives in that feature's layer directory: `src/Note/Entity/Note.php` is `App\Note\Entity\Note`. Create a layer directory only when the feature has a class for it. Do not create `src/Controller`, `src/Entity`, `src/Form`, `src/Repository`, or `src/Service`.
+`<Feature>` is the singular PascalCase noun (`User`, `Note`). A class lives in that feature's layer directory: `src/Note/Entity/Note.php` is `App\Note\Entity\Note`. Create a layer directory only when the feature has a class for it. Do not create `src/Controller`, `src/Entity`, `src/Form`, `src/Repository`, or `src/Service`. After `webapp` is installed, delete those empty directories if Flex created them. Leave `src/Migrations`.
 
 After `webapp` is installed, point Doctrine and the service container at this layout. In `config/packages/doctrine.yaml`, set the `App` mapping `dir` to `%kernel.project_dir%/src` and `prefix` to `App`. In `config/services.yaml`, replace the `../src/Entity/` exclude with `../src/*/Entity/`.
 
@@ -142,7 +144,7 @@ Leave the Docker files in place. Flex may edit `Dockerfile` and `compose.yaml` w
 11. **Assets** — Bootstrap CSS is Sass. `assets/styles/_theme.scss` sets the variables, imports Bootstrap from `vendor/twbs/bootstrap`, then adds the custom selectors. `app.scss` imports that theme. Compile with `sass:build`. Bootstrap's widget script is `import 'bootstrap'` in `app.js` (dropdowns, modals, dismiss). Do not import `bootstrap.min.css`. Do not add a Bootstrap CDN stylesheet. Do not add Webpack Encore, Tailwind, API Platform, or EasyAdmin.
 12. **Secrets** — `.env` is the committed Flex template. `.env.local` stays gitignored. Do not commit real production passwords. Local Compose defaults from the skeleton are fine for local development.
 13. **Thin controllers** — business rules go in a service even when a single action uses them. Do not put that rule in Twig or in a repository. `persist`, `flush`, and `remove` belong to the controller: call the service, then write through `EntityManager`. Queries stay in the repository.
-14. **Features** — layers live inside the feature: `src/Note/Controller`, `src/Note/Entity`, `src/Note/Form`, `src/Note/Repository`, `src/Note/Service`. Do not place those layers directly under `src/`.
+14. **Features** — layers live inside the feature: `src/Note/Controller`, `src/Note/Entity`, `src/Note/Form`, `src/Note/Repository`, `src/Note/Service`. Do not place those layers directly under `src/`. After `webapp` is installed, delete the empty `src/Controller`, `src/Entity`, and `src/Repository` directories Flex created. Leave `src/Migrations`. A resource from [feature.md](feature.md) is created only when the user names it. Do not create the Note example during bootstrap.
 15. **Twig components** — render an anonymous UX component with the `<twig:Name>` tag: `<twig:Topbar class="topbar"/>`, `<twig:Menu/>`. `templates/components/Name.html.twig` is `<twig:Name>`. Do not use `{{ component() }}`, `{% component %}`, or `{% include %}` for those templates. A file whose name starts with `_` stays an include.
 16. **JavaScript** — browser behavior is Hotwire Stimulus (`import { Controller } from '@hotwired/stimulus'`). The webapp pack starts it from `assets/stimulus_bootstrap.js`. Each file `assets/controllers/<job>_controller.js` has one responsibility and is named after that job (`password_visibility_controller.js` → `data-controller="password-visibility"`). A second behavior is a second controller on the same element. Do not put behavior in `app.js`, in `stimulus_bootstrap.js`, in a Twig `<script>`, or in `onclick`. Do not write a controller for a whole page or feature. Delete the recipe's `hello_controller.js`. Leave `csrf_protection_controller.js`.
 
