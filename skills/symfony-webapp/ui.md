@@ -22,6 +22,11 @@ twig:
 Copy this file as written. Variables stay above `@import "bootstrap"`. The custom selectors stay below that import so they override Bootstrap. `@import "bootstrap"` resolves through the Sass load path `vendor/twbs/bootstrap/scss`.
 
 ```scss
+// 62.5% of the 16px browser default: 1rem = 10px, so 1.618rem = 16.18px.
+html {
+  font-size: 62.5%;
+}
+
 // ==========================
 // VARIABLES
 $sizes: (
