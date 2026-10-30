@@ -39,7 +39,7 @@ After installing, invoke it in chat with `/symfony-twig-bootstrap`.
 Copy this repo into Cursor’s local plugins folder, then run **Developer: Reload Window**:
 
 ```sh
-cp -a /absolute/path/to/symfony_webapp_plugin ~/.cursor/plugins/local/symfony-webapp
+cp -a /absolute/path/to/symfony_webapp_plugin ~/.cursor/plugins/local/symfony-webapp-plugin
 ```
 
 Do not symlink. Cursor skips those links, so `/symfony-twig-bootstrap` never appears in chat. After reload, the plugin should show up under Customize → Plugins.

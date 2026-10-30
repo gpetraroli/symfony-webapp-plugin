@@ -499,7 +499,7 @@ docker compose exec php php bin/console doctrine:migrations:diff --no-interactio
 docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-Read the generated file under `migrations/` before migrating. The entrypoint runs `doctrine:migrations:migrate` on the next container start when PHP migration files exist.
+Read the generated SQL before migrating.
 
 ## 8. Check
 
@@ -531,7 +531,7 @@ docker compose up --wait
 
 Open https://localhost and accept the local certificate. Register the first account at https://localhost/register.
 
-Migrations run on container start when files exist under `migrations/`.
+Apply schema changes with `docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction`.
 
 ## Console
 

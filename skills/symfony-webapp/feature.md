@@ -498,4 +498,4 @@ Declare `/{id}/edit` and `/{id}/delete` as their own routes. Keep the `requireme
 
 ## 7. Migration
 
-Review the file written under `migrations/`. It should create the resource table and, on the first resource of a new app, `app_user`. Then migrate. Do not apply schema changes with raw SQL against the database.
+Review the generated SQL. It should create the resource table and, on the first resource of a new app, `app_user`. Then migrate. Do not apply schema changes with raw SQL against the database.
