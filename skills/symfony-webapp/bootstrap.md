@@ -153,7 +153,7 @@ If login is disabled, skip the User entity, the login and register templates, an
 
 ### src/User/Entity/User.php
 
-Table name is `app_user` because `user` is reserved in PostgreSQL.
+Table name is `app_user` because `user` is reserved in PostgreSQL. No `Assert` constraints. Email and password rules are on `RegistrationType`.
 
 On Symfony 7.4, `UserInterface` still declares `eraseCredentials()`. Add an empty `eraseCredentials(): void` method when that skeleton was installed. Symfony 8 does not declare it; an extra empty method is harmless.
 

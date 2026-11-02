@@ -10,7 +10,7 @@ docker compose exec php php bin/console doctrine:migrations:diff --no-interactio
 
 ## 1. Entity — `src/Note/Entity/Note.php`
 
-Fields, relations, and column mapping.
+Fields, relations, and column mapping. No `Assert` constraints. Validation belongs on the form type.
 
 ```php
 <?php
@@ -122,7 +122,7 @@ Show, edit, and delete do not need a finder. The controller type-hints `Note $no
 
 ## 3. Form — `src/Note/Form/NoteType.php`
 
-Constraints live on each field's `constraints` option. A constraint on the whole object, such as `UniqueEntity`, goes in `configureOptions`. Every form type ends with a `SubmitType`, so the template has no submit button.
+Constraints live on each field's `constraints` option, not on the entity. A constraint on the whole object, such as `UniqueEntity`, goes in `configureOptions`. Every form type ends with a `SubmitType`, so the template has no submit button.
 
 ```php
 <?php
