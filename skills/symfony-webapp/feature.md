@@ -1,10 +1,8 @@
 # Adding a CRUD resource
 
-Use this only when the user has named a resource. `Note` below is the example. Do not create `src/Note` or `templates/note` while bootstrapping an app.
+Use this only when the user has named a resource. `Note` below is the example. Rename consistently (`note`, `notes`, `Note`, `NoteRepository`, `NoteType`). Example: table `note`, route prefix `/notes`, under `src/Note/`.
 
-Example entity: `Note` / table `note` / route prefix `/notes`, under `src/Note/`. Rename consistently (`note`, `notes`, `Note`, `NoteRepository`, `NoteType`). The class route name is `app_note`; each action adds a suffix (`_index`, `_new`, `_show`, `_edit`, `_delete`), so the route name is `app_note_new`. Add `NoteService` only when a business rule exists.
-
-Generate the migration last. `doctrine:migrations:diff` writes the class. Set `getDescription()` before `doctrine:migrations:migrate`, as in section 7.
+Generate the migration last. See section 7. Skip interactive `make:entity`, `make:crud`, `make:user`, and `make:auth`. They stall.
 
 ```sh
 docker compose exec php php bin/console doctrine:migrations:diff --no-interaction
@@ -12,7 +10,7 @@ docker compose exec php php bin/console doctrine:migrations:diff --no-interactio
 
 ## 1. Entity — `src/Note/Entity/Note.php`
 
-Fields, relations, and column mapping. No `Assert` constraints. No `Request`, no queries.
+Fields, relations, and column mapping.
 
 ```php
 <?php
@@ -124,7 +122,7 @@ Show, edit, and delete do not need a finder. The controller type-hints `Note $no
 
 ## 3. Form — `src/Note/Form/NoteType.php`
 
-Constraints live here, on each field's `constraints` option. Do not put them on the entity. Every form type ends with a `SubmitType`. `form_widget` renders that button, so the template has no `<button type="submit">`.
+Constraints live on each field's `constraints` option. A constraint on the whole object, such as `UniqueEntity`, goes in `configureOptions`. Every form type ends with a `SubmitType`, so the template has no submit button.
 
 ```php
 <?php
@@ -257,7 +255,7 @@ class DeleteType extends AbstractType
 
 Add a service when the action applies a business rule (a calculation, a status change, a side effect), even if only one action calls it. Symfony autowires classes under `src/`.
 
-The service changes the entity or returns a result. It does not call `persist`, `flush`, or `remove`, and it does not take a `Request`. Storing a valid form with no extra rule needs no service; the controller persists it.
+The service changes the entity or returns a result. It does not take a `Request`. Storing a valid form with no extra rule needs no service; the controller persists it.
 
 ```php
 <?php
@@ -286,7 +284,7 @@ $entityManager->flush();
 
 ## 5. Controller — `src/Note/Controller/NoteController.php`
 
-`#[IsGranted('ROLE_USER')]` when login is enabled. The controller stays thin: form, CSRF, an optional service call, then `persist` / `flush` / `remove`, flash, redirect or render. A failed CSRF check denies access. Every successful POST redirects.
+`#[IsGranted('ROLE_USER')]` when login is enabled. Hiding a button in Twig is not authorization. A failed CSRF check denies access.
 
 ```php
 <?php

@@ -1,8 +1,8 @@
 # Bootstrap templates
 
-Use these when scaffolding an app. Replace `<app_dir>`. Layout partials: [ui.md](ui.md). A CRUD resource is a separate request: [feature.md](feature.md). Do not create the Note example while bootstrapping.
+Use these when scaffolding an app. Replace `<app_dir>`. Layout partials: [ui.md](ui.md). A CRUD resource is a separate request: [feature.md](feature.md).
 
-Run every command from the app directory (the one that contains `compose.yaml`). Docker Compose v2.10+ is required. Do not install PHP or Composer on the host.
+Run every command from the app directory (the one that contains `compose.yaml`). Docker Compose v2.10+ is required.
 
 ## 1. Create the project
 
@@ -17,7 +17,7 @@ docker compose build --pull --no-cache
 docker compose up --wait
 ```
 
-Do not set `SYMFONY_VERSION` or `STABILITY` unless the user asked. The entrypoint installs the current stable `symfony/skeleton`.
+Do not set `SYMFONY_VERSION` or `STABILITY` unless the user asked. The entrypoint installs the current stable `symfony/skeleton`. The PHP namespace stays `App`.
 
 On first start, `frankenphp/docker-entrypoint.sh` sees `composer.json` equal to `{}` and runs:
 
@@ -48,13 +48,13 @@ docker compose exec php composer require webapp --no-interaction
 docker compose up --build --wait
 ```
 
-Rebuild whenever a recipe changes `Dockerfile` or `compose.yaml` (typical: `pdo_pgsql`, a `database` service, Mailpit). Leave those recipe edits in place. Do not add a second database service by hand.
+Rebuild whenever a recipe changes `Dockerfile` or `compose.yaml` (typical: `pdo_pgsql`, a `database` service, Mailpit). Leave those recipe edits in place.
 
-`DATABASE_URL` on the `php` service in `compose.yaml` is what PHP sees inside Docker (`host` `database`, database `app`). Do not point it at `127.0.0.1`.
+`DATABASE_URL` on the `php` service in `compose.yaml` is what PHP sees inside Docker (`host` `database`, database `app`).
 
 ## 3. Bootstrap
 
-CSS is compiled from Sass. Bootstrap's widget script comes from the importmap. Every other browser behavior is a Hotwire Stimulus controller with one responsibility. See [ui.md](ui.md).
+Layout, styles, and Stimulus controllers are in [ui.md](ui.md).
 
 ```sh
 docker compose exec php composer require symfonycasts/sass-bundle twbs/bootstrap symfony/ux-twig-component --no-interaction
@@ -82,7 +82,7 @@ framework:
             - '**/assets/styles/**/_*.scss'
 ```
 
-Write `assets/styles/_theme.scss` and `assets/styles/app.scss` from [ui.md](ui.md). Delete `assets/styles/app.css` from the webapp pack. In `assets/app.js`, keep `import './stimulus_bootstrap.js'` and add `import 'bootstrap'`. Do not import `bootstrap/dist/css/bootstrap.min.css`. Do not put behavior in `app.js`. Delete `assets/controllers/hello_controller.js`. Leave `csrf_protection_controller.js`. New behavior goes in `assets/controllers/<job>_controller.js`, one responsibility per file, extending `Controller` from `@hotwired/stimulus`.
+Write the stylesheets and `assets/app.js` from [ui.md](ui.md).
 
 Compile inside the container:
 
@@ -94,7 +94,7 @@ During development, run `sass:build --watch` in the background. The first build 
 
 ## 4. Feature folders
 
-Code lives under `src/<Feature>/`, not under `src/Controller` or `src/Entity`. `User` and `Note` are features. Namespace `App\Note\Entity\Note` is the file `src/Note/Entity/Note.php`.
+`User` is a feature: `App\User\Entity\User` is the file `src/User/Entity/User.php`.
 
 After `webapp` is installed, delete `src/Controller`, `src/Entity`, and `src/Repository`. Flex puts only an empty `.gitignore` in each. Leave `src/Migrations`. Do not recreate those three directories.
 
@@ -322,7 +322,7 @@ class RegistrationType extends AbstractType
 
 ### src/User/Service/RegistrationService.php
 
-Hashing the password is a rule, so it lives here even though only the register action calls it. `persist` and `flush` stay in the controller.
+Hash the password here. `persist` and `flush` stay in the controller.
 
 ```php
 <?php

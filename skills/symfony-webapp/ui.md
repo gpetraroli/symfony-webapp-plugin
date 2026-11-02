@@ -1,6 +1,6 @@
 # Shared UI templates
 
-Write these into every app. Keep `{{ importmap('app') }}` for JavaScript. Bootstrap CSS is compiled from `assets/styles/app.scss`. Do not load Bootstrap from a CDN or from `bootstrap.min.css`. Browser behavior is Hotwire Stimulus: one controller, one responsibility.
+Write these into every app. Keep `{{ importmap('app') }}` for JavaScript. Bootstrap CSS is compiled from `assets/styles/app.scss`.
 
 ## config/packages/twig.yaml
 
@@ -188,7 +188,7 @@ $tooltip-padding-x: map-get($spacers, 2);
 
 ## assets/app.js
 
-Keep the Stimulus import the webapp pack added, then import Bootstrap's JavaScript so `data-bs-*` widgets work. Do not import Bootstrap CSS. Do not add listeners or behavior here.
+Keep the Stimulus import the webapp pack added, then import Bootstrap's JavaScript so `data-bs-*` widgets work.
 
 ```javascript
 import './stimulus_bootstrap.js';
@@ -333,8 +333,6 @@ One link per feature that exists. Bootstrap leaves the list empty. Add a link on
 ```
 
 ## templates/components/_flash_messages.html.twig
-
-Only `success` and `danger` are used by controllers.
 
 ```twig
 {% for label, messages in app.flashes %}

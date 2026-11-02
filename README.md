@@ -2,27 +2,7 @@
 
 Agent skill for scaffolding Symfony web apps with Twig, Bootstrap 5, and Doctrine. New projects start from [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker): FrankenPHP, Caddy, and Docker Compose. The skeleton install happens inside the container on first boot.
 
-This package is an [Agent Plugin](https://agent-plugins.org/) (Cursor, Copilot, VS Code, …) and a [Claude Code](https://code.claude.com/docs/en/plugins) plugin. The skill lives in `skills/symfony-twig-bootstrap/`.
-
-Use it to scaffold or extend an app that follows the conventional Symfony layout:
-
-```
-Twig (UI)
-    ↕  form view, flashes
-Controller (HTTP)
-    ↕  constructor injection
-Form type (fields, constraints, SubmitType)
-    ↕
-Service (business rules; the controller persists)
-    ↕
-Repository (queries)
-    ↕
-Entity (fields, relations)
-    ↕
-Doctrine
-```
-
-Twig owns markup. Controllers stay thin: they handle the request, call a service for any business rule, then `persist`, `flush`, or `remove`, and flash and redirect or render. Validation lives on the form type. Queries live in repositories. Services hold business rules even when only one action calls them, and they do not touch the entity manager. Each feature owns those layers under `src/<Feature>/` (`Controller`, `Entity`, `Form`, `Repository`, `Service`). Browser behavior is Hotwire Stimulus, one responsibility per controller.
+This package is an [Agent Plugin](https://agent-plugins.org/) (Cursor, Copilot, VS Code, …) and a [Claude Code](https://code.claude.com/docs/en/plugins) plugin. The skill lives in `skills/symfony-webapp/`.
 
 Every PHP, Composer, and `bin/console` command runs inside the `php` service (`docker compose exec php …`). The app is served at `https://localhost`.
 
