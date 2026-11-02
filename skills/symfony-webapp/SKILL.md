@@ -54,7 +54,7 @@ Run this only when the user names a resource. Templates are in [feature.md](feat
 3. Form types in `src/<Feature>/Form`: the resource form, a search form, and a delete form.
 4. A service when the action applies a business rule.
 5. Thin controller: index, new, edit, show, delete.
-6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig`.
+6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig`. A CSS rule for this feature goes in `assets/styles/_<feature>.scss`.
 7. `doctrine:migrations:diff`, review the SQL, set `getDescription()`, then `doctrine:migrations:migrate`.
 
 ## Folder layout
@@ -84,7 +84,9 @@ assets/
     <job>_controller.js
   styles/
     app.scss
-    _theme.scss
+    _theme.scss       # Bootstrap variables and Bootstrap class redefinitions
+    _layout.scss      # shell: topbar, sidenav, main content
+    _<feature>.scss   # rules owned by that feature
 ```
 
 `<Feature>` is the singular PascalCase noun (`User`, `Note`). `src/Note/Entity/Note.php` is `App\Note\Entity\Note`. Create a layer directory only when the feature has a class for it.

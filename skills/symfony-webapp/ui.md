@@ -13,20 +13,18 @@ twig:
 
 ## assets/styles/app.scss
 
+`_theme.scss` is the only place that redefines Bootstrap. Import a feature partial after `layout` when that feature has a rule of its own.
+
 ```scss
 @import "theme";
+@import "layout";
 ```
 
 ## assets/styles/_theme.scss
 
-Copy this file as written. Variables stay above `@import "bootstrap"`. The custom selectors stay below that import so they override Bootstrap. `@import "bootstrap"` resolves through the Sass load path `vendor/twbs/bootstrap/scss`.
+Copy this file as written. It may contain Bootstrap variable overrides and, below `@import "bootstrap"`, selectors that redefine a Bootstrap class (`.btn-primary`, `.btn-white`). `$sizes` exists only to feed those variables. A selector that is not a Bootstrap class goes in `assets/styles/_<feature>.scss`. The shell is `_layout.scss`. `@import "bootstrap"` resolves through the Sass load path `vendor/twbs/bootstrap/scss`.
 
 ```scss
-// 62.5% of the 16px browser default: 1rem = 10px, so 1.618rem = 16.18px.
-html {
-  font-size: 62.5%;
-}
-
 // ==========================
 // VARIABLES
 $sizes: (
@@ -42,13 +40,11 @@ $sizes: (
         9: 29.03rem,
 );
 
-$top_navbar_height: map-get($sizes, 6);
-$sidenav_height: min(100vh - $top_navbar_height);
-$sidenav_width: 300px;
-$transition_duration: .4s;
-
 // ==========================
 // TYPOGRAPHY
+
+// 62.5% of the 16px browser default: 1rem = 10px, so 1.618rem = 16.18px.
+$font-size-root: 62.5%;
 
 $font-family-sans-serif: "JetBrains Mono", ui-monospace, monospace;
 $font-family-monospace: "JetBrains Mono", ui-monospace, monospace;
@@ -150,14 +146,6 @@ $tooltip-padding-x: map-get($spacers, 2);
 
 @import "bootstrap";
 
-.input-group-number {
-  max-width: 250px;
-
-  input {
-    text-align: right;
-  }
-}
-
 .btn.btn-white:hover {
   background-color: $light-gray;
 }
@@ -170,6 +158,17 @@ $tooltip-padding-x: map-get($spacers, 2);
     border-color: $secondary;
   }
 }
+```
+
+## assets/styles/_layout.scss
+
+Rules for the shell in `base_layout.html.twig`. These are not Bootstrap classes, so they stay out of `_theme.scss`.
+
+```scss
+$top_navbar_height: map-get($sizes, 6);
+$sidenav_height: min(100vh - $top_navbar_height);
+$sidenav_width: 300px;
+$transition_duration: .4s;
 
 .topbar {
   height: $top_navbar_height;

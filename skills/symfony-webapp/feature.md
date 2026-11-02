@@ -507,6 +507,12 @@ Add one item to `templates/components/Menu.html.twig`:
 </li>
 ```
 
+A rule for this feature goes in `assets/styles/_note.scss`. Import it from `assets/styles/app.scss` after `layout`. Do not add it to `_theme.scss`. Skip the file when Bootstrap utilities cover the screen.
+
+```scss
+@import "note";
+```
+
 ## 7. Migration
 
 Review the generated SQL. It should create the resource table and, when this migration also introduces users, `app_user`. Set `getDescription()` to a sentence about that change. Do not leave it as `''`. Then migrate. Do not apply schema changes with raw SQL against the database.
