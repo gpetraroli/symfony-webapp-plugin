@@ -529,14 +529,22 @@ public function getDescription(): string
 docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-## 8. Check
+## 8. Tests
+
+Install PHPUnit, Foundry, and DAMA, then write the security tests, from [tests.md](tests.md). That file has the packages, the `app_test` database URL, `UserFactory`, `RegistrationServiceTest`, and `SecurityControllerTest`.
+
+When login is disabled, install the same stack and write `tests/Home/Controller/HomeControllerTest.php` only. Skip the user factory and the security tests.
+
+Run `docker compose exec php php vendor/bin/phpunit`. The suite must pass before the task is finished.
+
+## 9. Check
 
 ```sh
 docker compose exec php php bin/console about
 curl -kfsS -o /dev/null -w '%{http_code}\n' https://localhost/login
 ```
 
-`/login` is public and should return 200. `/` redirects to login until a user exists. Stop the stack with `docker compose down --remove-orphans`.
+`/login` is public and should return 200. `/` redirects to login until a user exists. The stack stays up for the test suite. Stop it with `docker compose down --remove-orphans` after `vendor/bin/phpunit` has passed.
 
 ## README.md
 
@@ -573,6 +581,14 @@ After a recipe changes `Dockerfile` or `compose.yaml`:
 \`\`\`sh
 docker compose up --build --wait
 \`\`\`
+
+## Tests
+
+\`\`\`sh
+docker compose exec php php vendor/bin/phpunit
+\`\`\`
+
+The suite uses the `app_test` database. It migrates that database once, then rolls each test back.
 
 ## Stop
 

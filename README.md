@@ -8,8 +8,8 @@ Every PHP, Composer, and `bin/console` command runs inside the `php` service (`d
 
 Typical tasks:
 
-- Create a new Symfony web app from the Symfony Docker skeleton, with the layout and form login
-- Add a resource as entity → repository → form → controller → Twig when the user names one
+- Create a new Symfony web app from the Symfony Docker skeleton, with the layout, form login, and PHPUnit
+- Add a resource as entity → repository → form → controller → Twig → PHPUnit when the user names one
 - Generate and run Doctrine migrations inside the container
 
 After installing, invoke it in chat with `/symfony-twig-bootstrap`.

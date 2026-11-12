@@ -2,7 +2,7 @@
 
 Use this only when the user has named a resource. `Note` below is the example. Rename consistently (`note`, `notes`, `Note`, `NoteRepository`, `NoteType`). Example: table `note`, route prefix `/notes`, under `src/Note/`.
 
-Generate the migration last. See section 7. Skip interactive `make:entity`, `make:crud`, `make:user`, and `make:auth`. They stall.
+Generate the migration in section 7, then the tests in section 8. Skip interactive `make:entity`, `make:crud`, `make:user`, `make:auth`, `make:test`, and `make:factory`. They stall.
 
 ```sh
 docker compose exec php php bin/console doctrine:migrations:diff --no-interaction
@@ -520,3 +520,13 @@ Review the generated SQL. It should create the resource table and, when this mig
 ```sh
 docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
+
+## 8. Tests
+
+Write the factory, the controller `WebTestCase`, and the service unit test from [tests.md](tests.md). Skip the service test when section 4 added no service. Rename `Note` to this resource. When login is disabled, follow the login-off variant in that file.
+
+```sh
+docker compose exec php php vendor/bin/phpunit
+```
+
+The suite must pass before the task is finished.

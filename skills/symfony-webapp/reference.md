@@ -12,6 +12,7 @@ Run these from the directory that contains `compose.yaml`. The `php` service mus
 | Bootstrap JS | `docker compose exec php php bin/console importmap:require bootstrap` |
 | Diff a migration | `docker compose exec php php bin/console doctrine:migrations:diff --no-interaction` |
 | Migrate | `docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction` |
+| Run the test suite | `docker compose exec php php vendor/bin/phpunit` |
 | Lint the container | `docker compose exec php php bin/console lint:container` |
 | Twig lint | `docker compose exec php php bin/console lint:twig templates` |
 | YAML lint | `docker compose exec php php bin/console lint:yaml config` |

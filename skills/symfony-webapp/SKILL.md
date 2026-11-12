@@ -1,6 +1,6 @@
 ---
 name: symfony-twig-bootstrap
-description: Scaffolds and extends Symfony web apps using Twig, Bootstrap 5, Hotwire Stimulus, Doctrine, form login, and the dunglas/symfony-docker FrankenPHP runtime. Use when creating a new Symfony web application, adding a CRUD page, form login, Doctrine migrations, or Stimulus controllers, or when the user mentions Symfony, Twig, Bootstrap, Stimulus, Hotwire, or Symfony Docker.
+description: Scaffolds and extends Symfony web apps using Twig, Bootstrap 5, Hotwire Stimulus, Doctrine, form login, PHPUnit, and the dunglas/symfony-docker FrankenPHP runtime. Use when creating a new Symfony web application, adding a CRUD page, form login, Doctrine migrations, PHPUnit tests, or Stimulus controllers, or when the user mentions Symfony, Twig, Bootstrap, Stimulus, Hotwire, or Symfony Docker.
 ---
 
 # Symfony + Twig + Bootstrap
@@ -27,10 +27,11 @@ Follow the templates in this skill. Every app uses this structure. Do not copy f
 - Bootstrap CSS comes from Sass. No Bootstrap CDN, no Webpack Encore, no Tailwind, no API Platform, no EasyAdmin.
 - Flashes are `success` and `danger`. Do not print exceptions in Twig.
 - `.env` stays the committed Flex template. `.env.local` stays gitignored.
+- Tests are PHPUnit, Foundry, and DAMA. The suite uses the `app_test` database, never `app`. Factories live in `tests/<Feature>/Factory`. A resource gets a controller `WebTestCase`. A service gets a unit test with no kernel. Entities, forms, and repositories do not get their own tests.
 
 ## New app workflow
 
-Copy this checklist and complete it in order. Commands and security are in [bootstrap.md](bootstrap.md). Layout and assets are in [ui.md](ui.md).
+Copy this checklist and complete it in order. Commands and security are in [bootstrap.md](bootstrap.md). Layout and assets are in [ui.md](ui.md). Tests are in [tests.md](tests.md).
 
 ```
 Bootstrap:
@@ -42,12 +43,13 @@ Bootstrap:
 - [ ] 6. Delete the empty Flex directories src/Controller, src/Entity, and src/Repository. Point Doctrine and the service container at src/<Feature>/ (bootstrap.md)
 - [ ] 7. Security, unless the user said no login: User, form login, register, logout
 - [ ] 8. Home page at src/Home. Do not redirect to a resource
-- [ ] 9. README (Compose, migrations, https://localhost)
+- [ ] 9. README (Compose, migrations, tests, https://localhost)
+- [ ] 10. Tests from tests.md. The suite must pass
 ```
 
 ## New feature workflow
 
-Run this only when the user names a resource. Templates are in [feature.md](feature.md).
+Run this only when the user names a resource. Templates are in [feature.md](feature.md). Tests are in [tests.md](tests.md).
 
 1. Entity with fields and relations, under `src/<Feature>/Entity`.
 2. Repository methods for list and search.
@@ -56,6 +58,10 @@ Run this only when the user names a resource. Templates are in [feature.md](feat
 5. Thin controller: index, new, edit, show, delete.
 6. Templates: `index`, `_form`, `new`, `edit`, `show`. They extend `base_layout.html.twig` and fill `content`. Add one link to `templates/components/Menu.html.twig`. A CSS rule for this feature goes in `assets/styles/_<feature>.scss`.
 7. `doctrine:migrations:diff`, review the SQL, set `getDescription()`, then `doctrine:migrations:migrate`.
+8. Factory `tests/<Feature>/Factory/<Entity>Factory.php` from tests.md.
+9. Controller `WebTestCase` from tests.md.
+10. Service unit test when step 4 added a service. Skip the file otherwise.
+11. `docker compose exec php php vendor/bin/phpunit`. Fix failures before finishing.
 
 ## Folder layout
 
@@ -67,6 +73,11 @@ src/
     Form/
     Repository/
     Service/
+tests/
+  <Feature>/
+    Controller/     # WebTestCase for that resource
+    Factory/        # Foundry factories
+    Service/        # unit test, only when the feature has a service
 templates/
   base.html.twig
   base_layout.html.twig
@@ -108,4 +119,5 @@ assets/
 - Project creation, security, README: [bootstrap.md](bootstrap.md)
 - Layout, Bootstrap, flashes, delete modal: [ui.md](ui.md)
 - CRUD templates: [feature.md](feature.md)
+- PHPUnit, Foundry, DAMA: [tests.md](tests.md)
 - Commands: [reference.md](reference.md)
