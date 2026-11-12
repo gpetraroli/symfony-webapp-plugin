@@ -5,7 +5,7 @@ description: Scaffolds and extends Symfony web apps using Twig, Bootstrap 5, Hot
 
 # Symfony + Twig + Bootstrap
 
-Follow the templates in this skill. Every app uses this structure. Do not copy from another project for patterns.
+Follow the templates in this skill. Every app uses this structure. Do not copy from another project for patterns. When a Symfony API is not specified here, read the docs for the version `bin/console -V` reports. The pages are in [reference.md](reference.md). These templates win when a doc example uses another layout.
 
 ## Architecture
 
@@ -120,4 +120,4 @@ assets/
 - Layout, Bootstrap, flashes, delete modal: [ui.md](ui.md)
 - CRUD templates: [feature.md](feature.md)
 - PHPUnit, Foundry, DAMA: [tests.md](tests.md)
-- Commands: [reference.md](reference.md)
+- Commands and Symfony docs: [reference.md](reference.md)
