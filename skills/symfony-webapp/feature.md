@@ -507,7 +507,7 @@ Add one item to `templates/components/Menu.html.twig`:
 </li>
 ```
 
-A rule for this feature goes in `assets/styles/_note.scss`. Import it from `assets/styles/app.scss` after `layout`. Do not add it to `_theme.scss`. Skip the file when Bootstrap utilities cover the screen.
+A rule for this feature goes in `assets/styles/_note.scss`. Import it at the end of `assets/styles/app.scss`. Skip the file when Bootstrap utilities cover the screen.
 
 ```scss
 @import "note";

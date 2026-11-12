@@ -38,7 +38,7 @@ Bootstrap:
 - [ ] 1. Confirm the directory name. That is the only question. Do not invent a resource
 - [ ] 2. Clone dunglas/symfony-docker, delete its docs/, and start Compose (skeleton only)
 - [ ] 3. composer require webapp inside the php service, then rebuild
-- [ ] 4. Sass theme from ui.md, then sass:build
+- [ ] 4. app.scss from ui.md, then sass:build
 - [ ] 5. base.html.twig, base_layout.html.twig, Topbar, empty Menu, flashes, form theme
 - [ ] 6. Delete the empty Flex directories src/Controller, src/Entity, and src/Repository. Point Doctrine and the service container at src/<Feature>/ (bootstrap.md)
 - [ ] 7. Security, unless the user said no login: User, form login, register, logout
@@ -94,9 +94,7 @@ assets/
   controllers/
     <job>_controller.js
   styles/
-    app.scss
-    _theme.scss       # Bootstrap variables and Bootstrap class redefinitions
-    _layout.scss      # shell: topbar, sidenav, main content
+    app.scss          # @import "bootstrap", then a feature partial when one exists
     _<feature>.scss   # rules owned by that feature
 ```
 

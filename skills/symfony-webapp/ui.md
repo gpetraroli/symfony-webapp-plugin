@@ -13,176 +13,10 @@ twig:
 
 ## assets/styles/app.scss
 
-`_theme.scss` is the only place that redefines Bootstrap. Import a feature partial after `layout` when that feature has a rule of its own.
+Import Bootstrap and nothing else. Do not add a theme or layout partial, and do not add a selector that redefines a Bootstrap class. `@import "bootstrap"` resolves through the Sass load path `vendor/twbs/bootstrap/scss`. A feature rule goes in `assets/styles/_<feature>.scss` and is imported at the end of this file. Skip that file when Bootstrap utilities cover the screen.
 
 ```scss
-@import "theme";
-@import "layout";
-```
-
-## assets/styles/_theme.scss
-
-Copy this file as written. It may contain Bootstrap variable overrides and, below `@import "bootstrap"`, selectors that redefine a Bootstrap class (`.btn-primary`, `.btn-white`). `$sizes` exists only to feed those variables. A selector that is not a Bootstrap class goes in `assets/styles/_<feature>.scss`. The shell is `_layout.scss`. `@import "bootstrap"` resolves through the Sass load path `vendor/twbs/bootstrap/scss`.
-
-```scss
-// ==========================
-// VARIABLES
-$sizes: (
-        0: 0rem,
-        1: 0.618rem,
-        2: 1.2rem,
-        3: 1.618rem,
-        4: 2.618rem,
-        5: 4.236rem,
-        6: 6.854rem,
-        7: 11.089rem,
-        8: 17.942rem,
-        9: 29.03rem,
-);
-
-// ==========================
-// TYPOGRAPHY
-
-// 62.5% of the 16px browser default: 1rem = 10px, so 1.618rem = 16.18px.
-$font-size-root: 62.5%;
-
-$font-family-sans-serif: "JetBrains Mono", ui-monospace, monospace;
-$font-family-monospace: "JetBrains Mono", ui-monospace, monospace;
-
-$font-size-base: map-get($sizes, 3);
-
-$paragraph-margin-bottom: 0;
-
-$headings-margin-bottom: 0;
-
-$font-sizes: (
-        1: map-get($sizes, 2),
-        2: map-get($sizes, 3),
-        3: map-get($sizes, 4),
-        4: map-get($sizes, 5),
-        5: map-get($sizes, 6),
-        6: map-get($sizes, 7),
-);
-
-// ==========================
-// SPACING
-
-$spacers: (
-        0: map-get($sizes, 0),
-        1: map-get($sizes, 1),
-        2: map-get($sizes, 2),
-        3: map-get($sizes, 3),
-        4: map-get($sizes, 4),
-        5: map-get($sizes, 5),
-        6: map-get($sizes, 6),
-        7: map-get($sizes, 7),
-        8: map-get($sizes, 8),
-);
-
-// ==========================
-// COLORS
-
-$primary: #1971c2;
-$secondary: #40c057;
-$white: #ffffff;
-$light-gray: #f5f5f5;
-$gray: #cccccc;
-$dark-gray: #495057;
-$black: #212529;
-$highlight: #fff9db;
-$success: #2f9e44;
-$warning: #ffd43b;
-$danger: #c92a2a;
-
-$theme-colors: (
-        "primary": $primary,
-        "secondary": $secondary,
-        "white": $white,
-        "light-gray": $light-gray,
-        "gray": $gray,
-        "dark-gray": $dark-gray,
-        "black": $black,
-        "highlight": $highlight,
-        "success": $success,
-        "warning": $warning,
-        "danger": $danger,
-);
-
-// ==========================
-// UTILITIES
-
-$box-shadow: 0px 0px 35px rgba(154, 161, 171, 0.15);
-$border-radius: 6px;
-
-// ==========================
-// FORMS
-
-$input-bg: $white;
-$input-padding-x: map-get($sizes, 2);
-$input-padding-y: map-get($sizes, 1);
-
-// ==========================
-// BUTTONS
-
-$btn-padding-x: map-get($sizes, 2);
-$btn-padding-y: 0.3rem;
-
-// ==========================
-// TABLES
-
-$table-hover-bg: $highlight;
-
-// ==========================
-// OFFCANVAS
-
-$offcanvas-horizontal-width: auto;
-
-// ==========================
-// TOOLTIP
-$tooltip-arrow-width: 1.5rem;
-$tooltip-arrow-height: .8rem;
-$tooltip-padding-y: map-get($spacers, 2);
-$tooltip-padding-x: map-get($spacers, 2);
-
 @import "bootstrap";
-
-.btn.btn-white:hover {
-  background-color: $light-gray;
-}
-
-.btn.btn-primary {
-  background-color: $primary;
-  color: $white;
-  &:hover {
-    background-color: $secondary;
-    border-color: $secondary;
-  }
-}
-```
-
-## assets/styles/_layout.scss
-
-Rules for the shell in `base_layout.html.twig`. These are not Bootstrap classes, so they stay out of `_theme.scss`.
-
-```scss
-$top_navbar_height: map-get($sizes, 6);
-$sidenav_height: min(100vh - $top_navbar_height);
-$sidenav_width: 300px;
-$transition_duration: .4s;
-
-.topbar {
-  height: $top_navbar_height;
-}
-
-.sidenav {
-  width: $sidenav_width;
-  height: $sidenav_height;
-  transition: width $transition_duration;
-}
-
-.main-content {
-  height: $sidenav_height;
-}
 ```
 
 ## assets/app.js
@@ -253,13 +87,12 @@ Targets, values, and actions belong to that one job. Do not register these contr
 
 ## templates/base_layout.html.twig
 
-Default page layout. Feature and account templates extend this and fill `content`. The stylesheets block loads the Sass build and JetBrains Mono.
+Default page layout. Feature and account templates extend this and fill `content`. The stylesheets block loads the Sass build.
 
 ```twig
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
 {% endblock %}
 
@@ -269,7 +102,7 @@ Default page layout. Feature and account templates extend this and fill `content
             <twig:Topbar class="topbar"/>
 
             <div class="d-flex">
-                <nav class="sidenav navbar bg-light-gray p-1 align-items-start overflow-scroll d-none d-lg-block">
+                <nav class="sidenav navbar bg-light p-1 align-items-start overflow-scroll d-none d-lg-block">
                     <twig:Menu/>
                 </nav>
 
