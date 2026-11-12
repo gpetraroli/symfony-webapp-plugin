@@ -12,7 +12,7 @@ Typical tasks:
 - Add a resource as entity → repository → form → controller → Twig → PHPUnit when the user names one
 - Generate and run Doctrine migrations inside the container
 
-After installing, invoke it in chat with `/symfony-twig-bootstrap`.
+After installing, invoke it in chat with `/symfony-webapp`.
 
 ## Cursor
 
@@ -22,7 +22,7 @@ Copy this repo into Cursor’s local plugins folder, then run **Developer: Reloa
 cp -a /absolute/path/to/symfony_webapp_plugin ~/.cursor/plugins/local/symfony-webapp-plugin
 ```
 
-Do not symlink. Cursor skips those links, so `/symfony-twig-bootstrap` never appears in chat. After reload, the plugin should show up under Customize → Plugins.
+Do not symlink. Cursor skips those links, so `/symfony-webapp` never appears in chat. After reload, the plugin should show up under Customize → Plugins.
 
 Re-copy after you change the plugin, then reload again.
 
